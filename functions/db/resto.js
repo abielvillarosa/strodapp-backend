@@ -2,7 +2,6 @@ exports.getStro = async (
     database
 ) => {
     const response = await database.ref().once('value');
-    // console.log('response', response.val())
     return response.val();
 }
 
@@ -25,9 +24,7 @@ exports.incrementRestoCounter = async (
     const path = 'restouid'
     const newCounter = currentCounter + 1
     updates[path] = newCounter
-    // return database.ref().update(updates)
     const response = await database.ref().update(updates)
-    // console.log('responsed', response.val())
     return database.ref().update(updates)
 }
 
@@ -45,15 +42,29 @@ exports.addNewResto = async (
     return { msg : 'success'}
 }
 
-// exports.updateUserId = async (
-//     database,
-//     UserId,
-//     Password
-// ) => {
-//     const updates = {}
-//     const pathUserId = 'UserId/UserId'
-//     updates[pathUserId] = UserId
-//     const pathPassword = 'UserId/Password'
-//     updates[pathPassword] = Password
-//     return database.ref().update(updates)
-// }
+exports.incrementProductCounter = async (
+    database,
+    currentCounter
+) => {
+    const updates = {}
+    const path = 'productuid'
+    const newCounter = currentCounter + 1
+    updates[path] = newCounter
+    const response = await database.ref().update(updates)
+    return database.ref().update(updates)
+}
+
+exports.addNewProduct = async (
+    database,
+    productUid,
+    restoUid,
+    productName,
+    requiredPts
+) => {
+    const response = await database.ref(`products/${restoUid}/${productUid}`)
+    response.set({
+        'productName': productName, 
+        'requiredPts': requiredPts
+    })
+    return { msg : 'success'}
+}
