@@ -68,3 +68,65 @@ exports.addNewProduct = async (
     })
     return { msg : 'success'}
 }
+
+exports.getProducts = async (
+    database,
+    restoUid
+) => {
+    let temp = []
+
+    const response = await database.ref(`products/${restoUid}`).once('value')
+
+    response.forEach(childSnapshot => {
+        temp.push(childSnapshot.val())
+    })
+    return temp;
+}
+
+exports.incrementCustomerCounter = async (
+    database,
+    currentCounter
+) => {
+    const updates = {}
+    const path = 'customeruid'
+    const newCounter = currentCounter + 1
+    updates[path] = newCounter
+    const response = await database.ref().update(updates)
+    return database.ref().update(updates)
+}
+
+exports.addNewCustomer = async (
+    database,
+    restoUid,
+    customerUid,
+    customerAddress,
+) => {
+    const response = await database.ref(`customers/${restoUid}/${customerUid}`)
+    response.set({
+        'customerAddress': customerAddress, 
+        'requiredPts': 0
+    })
+    return { msg : 'success'}
+}
+
+exports.getCustomerPts = async (
+    database,
+    restoUid,
+    customerUid
+) => {
+    const response = await database.ref(`customers/${restoUid}/${customerUid}/earnedPts`).once('value')
+    return response.val()
+}
+
+exports.updateCustomerPts = async (
+    database,
+    restoUid,
+    customerUid,
+    earnedPts,
+) => {
+    const updates = {}
+    const path = `customers/${restoUid}/${customerUid}/earnedPts`
+    updates[path] = earnedPts
+    const response = await database.ref().update(updates)
+    return database.ref().update(updates)
+}
