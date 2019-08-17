@@ -157,7 +157,7 @@ exports.redeemPts = functions.https.onRequest((req, res) => {
             // console.log('productreqbody', req.body)
             const body = JSON.parse(req.body)
             const currentPts = await website.getCustomerPts(admin.database(), body.restoUid, body.customerUid)
-            const newEarnedPts = currentPts + body.earnedPts
+            const newEarnedPts = currentPts - body.earnedPts
             // const customerUid = Stro.customeruid
             const newProduct = await website.updateCustomerPts(admin.database(), body.restoUid, body.customerUid, newEarnedPts)
             const newStro = await website.getStro(admin.database())
